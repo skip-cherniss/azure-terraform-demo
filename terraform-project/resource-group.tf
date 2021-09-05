@@ -13,4 +13,5 @@
 resource "azurerm_resource_group" "rg_vstudio_terraform_demo" {
   name = "rg-vstudio_terraform_demo"
   location = var.location
+  tags = local.tags
 }

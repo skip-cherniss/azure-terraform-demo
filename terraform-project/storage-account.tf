@@ -14,7 +14,7 @@
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#network_rules
 # Note, the link doesn't take you to the exact space on the page, just continue to search for network_rules
 resource "azurerm_storage_account" "storage" {
-  name                      = var.account_name
+  name                      = var.storage_account_name
   resource_group_name       = azurerm_resource_group.rg_vstudio_terraform_demo.name
   location                  = var.location
   account_kind              = "StorageV2"
@@ -28,14 +28,14 @@ resource "azurerm_storage_account" "storage" {
       days = var.soft_delete_retention
     }    
   }
-  network_rules = {
+  network_rules {
     default_action = "Deny" 
     ip_rules = ["1.1.1.1/24"] 
     virtual_network_subnet_ids = ["${data.azurerm_subnet.demo_subnet.id}"] 
     bypass = ["Logging","Metrics"]
 
   }
-  tags = var.tags
+  tags = local.tags
 }
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -68,12 +68,12 @@ locals {
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint
 
 resource "azurerm_private_endpoint" "private_endpoints" {
-  for_each = locals.storage_endpoints
+  for_each = local.storage_endpoints
   name = each.value["name"]
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.rg_vstudio_terraform_demo.name
   location = var.location
   subnet_id = each.value["subnet_id"]
-  tags = var.tags
+  tags = local.tags
   private_service_connection {
     name = var.storage_account_name
     is_manual_connection = false

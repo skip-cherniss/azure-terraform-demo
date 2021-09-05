@@ -7,11 +7,28 @@
 # LinkedIn:   https://www.linkedin.com/in/skipcherniss/
 # ----------------------------------------------------------------------------------------------------------------
 
-variable tags {
-        owner   = "highspeedlowdrag"
-        env     = "demo"
-        creator = "terraform"
+variable "owner" {
+  description = "Who will own this resource going forward"
+  default = "alpha-company"
+}
+
+variable "creator" {
+  description = "who created this resource"
+  default = "highspeedlowdrag-terraform"
+}
+
+variable "env" {
+  description = "what environment is this for"
+  default = "demo"
+}
+
+locals {
+  tags = {
+        owner   = var.owner
+        env     = var.env
+        creator = var.creator
     }
+}
 
 variable "storage_account_name" {
     description = "Defines the name for the storage account we are creating."
@@ -43,3 +60,20 @@ variable "soft_delete_retention" {
   type        = number
   default     = 31
 }
+
+variable "client_id"{
+    description = "Client ID for terraform service principal."
+}
+
+variable "client_secret" {
+    description = "Client secret for terraform service principal."
+}
+
+variable "subscription_id" {
+    description = "Subscription ID for Initial."
+}
+
+variable "tenant_id" {
+    description = "Tenant ID for our Azure account"
+}
+
